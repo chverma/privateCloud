@@ -16,7 +16,7 @@ DOMAIN_TLD=$(echo $1 | cut -d. -f2)
 NEXTCLOUD_SUBDOMAIN=$2
 MANAGE_USERS_SUBDOMAIN=$3
 ORGANIZATION_NAME=$4
-NEXTCLOUD_URL=$(echo $NEXTCLOUD_SUBDOMAIN.$DOMAIN.$DOMAIN_TLD)
+
 
 
 ##############################################################
@@ -79,14 +79,35 @@ fi
 if [ $install_nginx == "y" ]
 then
  sudo apt install -y nginx certbot python3-certbot-nginx
- #wget
- sudo cp uji/nextcloud0 /etc/nginx/sites-available/nextcloud
- sudo sed -i "s/example\.com/$URL/g" /etc/nginx/sites-enabled/nextcloud
- sudo ln -s /etc/nginx/sites-enabled/nextcloud /etc/nginx/sites-available/nextcloud
- sudo certbot --redirect -n -d $URL --nginx
- sudo cp uji/nextcloud2 /etc/nginx/sites-enabled/nextcloud
- sudo sed -i "s/example\.com/$URL/g" /etc/nginx/sites-enabled/nextcloud
- sudo systemctl restart nginx
+ 
+ sudo cp initSite  /etc/nginx/sites-available/nextcloud
+ sudo cp initSite  /etc/nginx/sites-available/manage_ldap_users
+ sudo cp initSite  /etc/nginx/sites-available/webmail
+
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" -e "s/MYSUBDOMAIN/$NEXTCLOUD_SUBDOMAIN/g" /etc/nginx/sites-available/nextcloud
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" -e "s/MYSUBDOMAIN/$MANAGE_USERS_SUBDOMAIN/g" /etc/nginx/sites-available/manage_ldap_users
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" -e "s/MYSUBDOMAIN/mail/g" /etc/nginx/sites-available/webmail
+
+ sudo ln -s /etc/nginx/sites-available/nextcloud /etc/nginx/sites-enabled/nextcloud
+ sudo ln -s /etc/nginx/sites-available/manage_ldap_users /etc/nginx/sites-enabled/manage_ldap_users
+ sudo ln -s /etc/nginx/sites-available/webmail /etc/nginx/sites-enabled/webmail
+ 
+ for sub in $NEXTCLOUD_SUBDOMAIN $MANAGE_USERS_SUBDOMAIN mail
+ do
+   sudo certbot --redirect -n -d $sub.$DOMAIN.$DOMAIN_TLD --nginx --agree-tos --email fake@fake.com
+ done
+ 
+ sudo cp nextcloud /etc/nginx/sites-available/
+ sudo cp manage_ldap_users /etc/nginx/sites-available/
+ sudo cp webmail /etc/nginx/sites-available/
+ 
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" -e "s/NEXTCLOUD_SUBDOMAIN/$NEXTCLOUD_SUBDOMAIN/g" /etc/nginx/sites-available/nextcloud
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" -e "s/USERS_SUBDOMAIN/$MANAGE_USERS_SUBDOMAIN/g" /etc/nginx/sites-available/manage_ldap_users
+ sudo sed -i -e "s/MYDOMAIN/$DOMAIN/g" -e "s/MYDOM_TLD/$DOMAIN_TLD/g" /etc/nginx/sites-available/webmail
+ 
+ sudo killall -9 nginx
+ sudo systemctl start nginx
+
 fi
 
 ##############################################################
