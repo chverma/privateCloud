@@ -129,7 +129,7 @@ then
 
   bash docker-mailserver-1.0.0/configure.sh $DOMAIN.$DOMAIN_TLD $LDAP_PASSWORD
   $(cd docker-mailserver-1.0.0 && docker-compose up -d)
-  $(cd docker-mailserver-1.0.0 && bash setup.sh config dkim domain '$DOMAIN.$DOMAIN_TLD') 
+  $(cd docker-mailserver-1.0.0 && ./setup.sh config dkim domain "$DOMAIN.$DOMAIN_TLD") 
 fi
 
 
