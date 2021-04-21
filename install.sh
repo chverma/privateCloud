@@ -63,7 +63,7 @@ if [ $install_nextcloud == "y" ]
 then
  wget -O /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-$NEXTCLOUD_VERSION.zip 2>/dev/null
  sudo apt install -y unzip 1>/dev/null
- sudo unzip -o /tmp/nextcloud.zip -d /var/www/
+ sudo unzip -o /tmp/nextcloud.zip -d /var/www/ 1>/dev/null
  sudo chown -R www-data:www-data /var/www/nextcloud
  
  sudo apt install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql mysql-server 1>/dev/null
