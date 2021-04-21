@@ -62,13 +62,12 @@ fi
 if [ $install_nextcloud == "y" ]
 then
  wget -O /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-$NEXTCLOUD_VERSION.zip 2>/dev/null
- sudo apt -qq install -y unzip
+ sudo apt install -y unzip 1>/dev/null
  sudo unzip -o /tmp/nextcloud.zip -d /var/www/
  sudo chown -R www-data:www-data /var/www/nextcloud
  
- sudo apt -qq install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql
+ sudo apt install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql mysql-server 1>/dev/null
 
- sudo apt -qq install -y mysql-server
  mysql_passwd=`openssl rand -base64 14`
  sudo mysql -uroot -e "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$mysql_passwd'; 
         CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -80,7 +79,7 @@ fi
 ############## NGINX
 if [ $install_nginx == "y" ]
 then
- sudo apt -qq install -y nginx certbot python3-certbot-nginx
+ sudo apt install -y nginx certbot python3-certbot-nginx 1>/dev/null
  
  sudo cp initSite  /etc/nginx/sites-available/nextcloud
  sudo cp initSite  /etc/nginx/sites-available/manage_ldap_users
@@ -143,5 +142,5 @@ if [ $install_containers == "y" ]
 then
   echo -e "${GREEN}S'ha creat la contrasenya per a LDAP ${RED}$LDAP_PASSWORD${NC}"
   echo -e "${GREEN}Visita ${RED}https://$MANAGE_USERS_SUBDOMAIN.$DOMAIN.$DOMAIN_TLD/setup ${GREEN} i utilitza la contrasenya d'LDAP generada"
-  echo -e "${GREEN}Ja pots visitar ${RED}https://mail.$DOMAIN.$DOMAIN_TLD ${GREEN}per provar el webmail"
+  echo -e "${GREEN}Ja pots visitar ${RED}https://mail.$DOMAIN.$DOMAIN_TLD ${GREEN}per provar el webmail${NC}"
 fi
