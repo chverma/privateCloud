@@ -21,6 +21,7 @@ LDAP_PASSWORD=""
 mysql_passwd=""
 
 
+sudo apt -qq update
 ##############################################################
 ############## ASK USER
 #sudo apt-get update
@@ -39,7 +40,7 @@ install_containers=${install_containers,,}
 ############## DOCKER
 if [ $install_docker == "y" ]
 then
-sudo apt install -y \
+sudo apt -qq install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -51,23 +52,23 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o 
  echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
- sudo apt-get update
+ sudo apt -qq update
 
- sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+ sudo apt -qq install -y docker-ce docker-ce-cli containerd.io
 fi
 
 ##############################################################
 ############## NEXTCLOUD
 if [ $install_nextcloud == "y" ]
 then
- wget -O /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-$NEXTCLOUD_VERSION.zip
- sudo apt install -y unzip
- sudo unzip /tmp/nextcloud.zip -d /var/www/
+ wget -O /tmp/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-$NEXTCLOUD_VERSION.zip 2>/dev/null
+ sudo apt -qq install -y unzip
+ sudo unzip -o /tmp/nextcloud.zip -d /var/www/
  sudo chown -R www-data:www-data /var/www/nextcloud
  
- sudo apt install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql
+ sudo apt -qq install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql
 
- sudo apt install -y mysql-server
+ sudo apt -qq install -y mysql-server
  mysql_passwd=`openssl rand -base64 14`
  sudo mysql -uroot -e "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$mysql_passwd'; 
         CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -79,7 +80,7 @@ fi
 ############## NGINX
 if [ $install_nginx == "y" ]
 then
- sudo apt install -y nginx certbot python3-certbot-nginx
+ sudo apt -qq install -y nginx certbot python3-certbot-nginx
  
  sudo cp initSite  /etc/nginx/sites-available/nextcloud
  sudo cp initSite  /etc/nginx/sites-available/manage_ldap_users
