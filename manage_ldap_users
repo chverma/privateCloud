@@ -38,7 +38,7 @@ server {
 
 
 server {
-    if ($host = USERS_SUBDOMAIN.apicv.net) {
+    if ($host = USERS_SUBDOMAIN.MYDOMAIN.MYDOM_TLD) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
