@@ -125,11 +125,14 @@ then
   
   
   bash docker-openldap-1.0.0/config.sh $DOMAIN.$DOMAIN_TLD $MANAGE_USERS_SUBDOMAIN $ORGANIZATION_NAME $LDAP_PASSWORD
-  $(cd docker-openldap-1.0.0 && docker-compose up -d)
+  cd docker-openldap-1.0.0 && docker-compose up -d
+  cd -
 
   bash docker-mailserver-1.0.0/configure.sh $DOMAIN.$DOMAIN_TLD $LDAP_PASSWORD
-  $(cd docker-mailserver-1.0.0 && docker-compose up -d)
-  $(cd docker-mailserver-1.0.0 && ./setup.sh config dkim domain "$DOMAIN.$DOMAIN_TLD") 
+  cd docker-mailserver-1.0.0
+  docker-compose up -d
+  ./setup.sh config dkim domain "$DOMAIN.$DOMAIN_TLD"
+  cd -
 fi
 
 
