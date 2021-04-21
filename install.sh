@@ -40,12 +40,12 @@ install_containers=${install_containers,,}
 ############## DOCKER
 if [ $install_docker == "y" ]
 then
-sudo apt -qq install -y \
+sudo apt install -y \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg \
-    lsb-release
+    lsb-release 1>/dev/null
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
@@ -54,7 +54,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o 
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
  sudo apt -qq update
 
- sudo apt -qq install -y docker-ce docker-ce-cli containerd.io docker-compose
+ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose 1>/dev/null
 fi
 
 ##############################################################
