@@ -66,13 +66,15 @@ then
  sudo unzip -o /tmp/nextcloud.zip -d /var/www/ 1>/dev/null
  sudo chown -R www-data:www-data /var/www/nextcloud
  
- sudo apt install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql mysql-server 1>/dev/null
+ sudo apt install -y php-imagick php7.4-common php7.4-gd php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-fpm php7.4-mysql mysql-server php-bcmath php-gmp php7.4-ldap 1>/dev/null
 
  mysql_passwd=`openssl rand -base64 14`
  sudo mysql -uroot -e "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$mysql_passwd'; 
         CREATE DATABASE IF NOT EXISTS nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
         GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
 	FLUSH PRIVILEGES;"
+ sudo cp www.conf /etc/php/7.4/fpm/pool.d/www.conf
+ sudo cp php.ini /etc/php/7.4/fpm/php.ini
 fi
 
 ##############################################################
